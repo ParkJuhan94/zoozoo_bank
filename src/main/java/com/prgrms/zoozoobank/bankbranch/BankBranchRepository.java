@@ -64,8 +64,6 @@ public class BankBranchRepository {
         Map<String, Object> params = new HashMap<>();
         params.put("id", branchId);
         namedParameterJdbcTemplate.update(sql, params);
-
-        // You may need to handle the deletion of associated accounts if needed
     }
 
     private boolean branchExists(String branchName) {

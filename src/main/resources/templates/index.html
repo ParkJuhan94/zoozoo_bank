@@ -14,23 +14,37 @@
             text-align: center;
             margin-top: 100px;
         }
-        .btn-action {
+        .menu-btn {
             margin: 20px;
+            background-color: #007bff; /* bootstrap primary color */
+            color: white; /* text color */
+            border: none; /* remove border */
+            transition: background-color 0.3s ease; /* smooth transition for background color */
+        }
+        .menu-btn:hover {
+            background-color: #0056b3; /* darker shade of blue on hover */
+            color: #fff; /* text color */
+        }
+        .welcome-message {
+            background-color: rgba(255, 255, 255, 0.1); /* white background with 10% opacity */
+            padding: 20px;
+            border-radius: 10px;
+            text-shadow: 2px 2px 4px #000000; /* text shadow for better readability */
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Welcome to ZooZoo Bank</h1><br><br>
+    <h1 class="welcome-message">Welcome to ZooZoo Bank</h1><br><br>
     <div>
-        <a href="/customer/all" class="btn btn-primary btn-action">Customer Management</a>
+        <a href="/customer/all" class="btn menu-btn">Customer Management</a>
     </div>
     <div>
-        <a href="/account/all" class="btn btn-success btn-action">Account Management</a>
+        <a href="/account/all" class="btn menu-btn">Account Management</a>
     </div>
     <div>
-        <a href="/bankbranch/all" class="btn btn-info btn-action">Bank Branch Management</a>
+        <a href="/bankbranch/all" class="btn menu-btn">Bank Branch Management</a>
     </div>
 </div>
 

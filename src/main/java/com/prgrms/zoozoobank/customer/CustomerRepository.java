@@ -1,5 +1,6 @@
 package com.prgrms.zoozoobank.customer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import static com.prgrms.zoozoobank.customer.CustomerMessage.FAILURE_CREATE_CUST
 import static com.prgrms.zoozoobank.customer.CustomerMessage.SUCCESS_CREATE_CUSTOMER;
 
 @Repository
+@Slf4j
 public class CustomerRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -24,16 +26,21 @@ public class CustomerRepository {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        return namedParameterJdbcTemplate.query(sql, params, rs -> {
+        List<Customer.Info> customerInfos = namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
             Customer.Info customerInfo = new Customer.Info();
-
             customerInfo.setId(rs.getInt("id"));
             customerInfo.setName(rs.getString("name"));
             customerInfo.setContactInfo(rs.getString("contact_info"));
-
-            return Optional.of(customerInfo);
+            return customerInfo;
         });
+
+        if (customerInfos.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(customerInfos.get(0));
+        }
     }
+
 
     public Customer.Response save(Customer.Request request) {
         if (customerExists(request.getName(), request.getContactInfo())) {

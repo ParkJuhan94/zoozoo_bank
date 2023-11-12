@@ -4,14 +4,12 @@ import com.prgrms.zoozoobank.account.Account;
 import lombok.*;
 
 import java.util.List;
-import java.util.Optional;
 
 public class BankBranch {
 
     @Getter @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-    @Builder
     public static class Info {
         private int id;
         private long assets;

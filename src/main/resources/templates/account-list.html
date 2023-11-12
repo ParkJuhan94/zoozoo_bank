@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>지점 관리 - ZooZoo Bank</title>
+
+    <!-- 부트스트랩 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <!-- 다크 모드 스타일 -->
+    <link rel="stylesheet" th:href="@{/path/to/dark-mode-style.css}">
+
+</head>
+<body class="bg-dark text-light">
+
+<div class="container mt-5">
+    <h1 class="text-light">계좌 관리</h1>
+    <br><br><br>
+    <a href="/account/create" class="btn btn-primary">계좌 개설</a>
+    <a href="/" class="btn btn-secondary">뒤로 가기</a>
+
+    <table class="table table-dark mt-4">
+        <thead>
+        <tr>
+            <th scope="col" class="col-1">계좌 번호</th>
+            <th scope="col" class="col-2">고객 이름</th>
+            <th scope="col" class="col-2">고객 연락처</th>
+            <th scope="col" class="col-2">지점 이름</th>
+            <th scope="col" class="col-2">잔액</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="account, stat : ${accounts}"
+            th:with="customerInfo=${customerNames[stat.index]},
+                contactInfo=${customerContactInfos[stat.index]},
+                branchName=${branchNames[stat.index]}"
+        >
+            <th scope="row" th:text="${account.getId()}"></th>
+            <td th:text="${customerInfo}"></td>
+            <td th:text="${contactInfo}"></td>
+            <td th:text="${branchName}"></td>
+            <td th:text="${#numbers.formatDecimal(account.getBalance(), 0, 'COMMA', 0, 'POINT')} + ' 원'"></td>
+            <td>
+                <form th:action="@{/account/delete/__${account.getId()}__}" method="post">
+                    <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this account?')">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 부트스트랩 및 관련 자바스크립트 파일들을 포함 -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIEX8r8RiStf+3wb8F/QpUJzoEa0pfeJ4u6Qs1TK1qU5PqnpvprU"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

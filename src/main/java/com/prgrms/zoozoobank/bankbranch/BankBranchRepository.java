@@ -4,10 +4,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.prgrms.zoozoobank.bankbranch.BankBranchMessage.FAILURE_CREATE_BRANCH;
 import static com.prgrms.zoozoobank.bankbranch.BankBranchMessage.SUCCESS_CREATE_BRANCH;
@@ -27,16 +24,23 @@ public class BankBranchRepository {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        return namedParameterJdbcTemplate.query(sql, params, rs -> {
-            BankBranch.Info branchInfo = new BankBranch.Info();
+        List<BankBranch.Info> resultList = namedParameterJdbcTemplate.query(sql, params, rs -> {
+            List<BankBranch.Info> branches = new ArrayList<>();
 
-            branchInfo.setId(rs.getInt("id"));
-            branchInfo.setAssets(rs.getLong("assets"));
-            branchInfo.setBranchName(rs.getString("branch_name"));
+            while (rs.next()) {
+                BankBranch.Info branchInfo = new BankBranch.Info();
+                branchInfo.setId(rs.getInt("id"));
+                branchInfo.setAssets(rs.getLong("assets"));
+                branchInfo.setBranchName(rs.getString("branch_name"));
+                branches.add(branchInfo);
+            }
 
-            return Optional.of(branchInfo);
-        }).stream().findFirst();
+            return branches;
+        });
+
+        return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
     }
+
 
     public BankBranch.Response save(BankBranch.Request request) {
         if (branchExists(request.getBranchName())) {

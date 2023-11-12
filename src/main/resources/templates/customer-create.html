@@ -32,6 +32,9 @@
         <br>
         <button type="submit" class="btn btn-primary">추가</button>
         <a href="/customer/all" class="btn btn-secondary">뒤로 가기</a>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}">
+            <!-- 오류 메시지가 여기에 표시됩니다. -->
+        </div>
     </form>
 </div>
 
@@ -45,5 +48,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script th:if="${errorMessage}">
+    alert([[${errorMessage}]]);
+</script>
 </body>
 </html>

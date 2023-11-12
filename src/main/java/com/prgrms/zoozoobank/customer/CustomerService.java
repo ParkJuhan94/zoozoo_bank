@@ -19,7 +19,7 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public Customer.Response findById(int id) {
+    public Customer.Response getCustomerById(int id) {
         Optional<Customer.Info> customerOptional = customerRepository.findById(id);
         Customer.Response repositoryResponse = new Customer.Response();
 
@@ -51,4 +51,5 @@ public class CustomerService {
     public void deleteCustomerById(int customerId) {
         customerRepository.deleteById(customerId);
     }
+
 }

@@ -6,7 +6,7 @@ public class Account {
 
     /*
     Info 의 setter 가 없으니까 다음 메서드에서
-    데이터가 전부 0으로 뽑힘.
+    데이터가 전부 0으로 뽑힘 -> BeanPropertyRowMapper 가 setter 를 필요로 하는듯?
 
     public List<Account.Info> findAll() {
         String sql = "SELECT * FROM account";
@@ -34,6 +34,7 @@ public class Account {
     }
 
     @Getter @Setter
+    @AllArgsConstructor
     public static class Request {
         private long balance;
         private int customerId;

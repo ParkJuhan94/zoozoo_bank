@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+
+import static com.prgrms.zoozoobank.customer.CustomerValidator.validateCreateRequest;
 
 @Controller
 @Slf4j
@@ -22,7 +25,7 @@ public class CustomerController {
 
     @GetMapping("/{customerId}")
     public ResponseEntity<Customer.Response> getCustomerById(@PathVariable int customerId) {
-        Customer.Response response = customerService.findById(customerId);
+        Customer.Response response = customerService.getCustomerById(customerId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -40,10 +43,20 @@ public class CustomerController {
 
     @PostMapping("/create")
     public String createCustomer(@RequestParam(value = "name") String name,
-                                 @RequestParam(value = "contactInfo") String contactInfo) {
-        Customer.Response response = customerService.createCustomer(new Customer.Request(name, contactInfo));
+                                 @RequestParam(value = "contactInfo") String contactInfo,
+                                 Model model, RedirectAttributes redirectAttributes) {
+        Customer.Request request = new Customer.Request(name, contactInfo);
+        Customer.Response response = validateCreateRequest(request);
+        if (response != null) {
+            // 검증 실패 메시지를 RedirectAttributes에 추가
+            redirectAttributes.addFlashAttribute("errorMessage", response.getReturnMessage());
+            return "redirect:/customer/create"; // 실패 시 다시 폼 페이지로 리다이렉션
+        }
+
+        customerService.createCustomer(request);
         return "redirect:/customer/all";
     }
+
 
     @PostMapping("/delete/{customerId}")
     public String deleteCustomer(@PathVariable int customerId) {

@@ -30,10 +30,5 @@ public class zoozoobankWebApplicationInitializer implements WebApplicationInitia
     @EnableTransactionManagement
     static class RootConfig {
 
-        @Bean
-        public PlatformTransactionManager platformTransactionManager(DataSource dataSource) {
-            return new DataSourceTransactionManager(dataSource);
-        }
-
     }
 }

@@ -35,14 +35,22 @@
         <tbody>
         <tr th:each="account, stat : ${accounts}"
             th:with="customerInfo=${customerNames[stat.index]},
-                contactInfo=${customerContactInfos[stat.index]},
-                branchName=${branchNames[stat.index]}"
+                 contactInfo=${customerContactInfos[stat.index]},
+                 branchName=${branchNames[stat.index]}"
         >
             <th scope="row" th:text="${account.getId()}"></th>
             <td th:text="${customerInfo}"></td>
             <td th:text="${contactInfo}"></td>
             <td th:text="${branchName}"></td>
             <td th:text="${#numbers.formatDecimal(account.getBalance(), 0, 'COMMA', 0, 'POINT')} + ' 원'"></td>
+            <td>
+                <div class="btn-group" role="group" aria-label="Account actions">
+                    <!-- 입금 버튼 -->
+                    <a th:href="@{/account/deposit/__${account.getId()}__}" class="btn btn-info">Deposit</a>
+                    <!-- 출금 버튼 -->
+                    <a th:href="@{/account/withdraw/__${account.getId()}__}" class="btn btn-light">Withdraw</a>
+                </div>
+            </td>
             <td>
                 <form th:action="@{/account/delete/__${account.getId()}__}" method="post">
                     <button type="submit" class="btn btn-danger"
@@ -66,5 +74,11 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script th:inline="javascript">
+    var createMessage = [[${createMessage}]];
+    if (createMessage) {
+        alert(createMessage);
+    }
+</script>
 </body>
 </html>

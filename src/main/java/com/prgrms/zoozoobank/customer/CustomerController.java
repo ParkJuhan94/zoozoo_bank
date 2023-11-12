@@ -41,7 +41,7 @@ public class CustomerController {
     @PostMapping("/create")
     public String createCustomer(@RequestParam(value = "name") String name,
                                  @RequestParam(value = "contactInfo") String contactInfo) {
-        customerService.createCustomer(new Customer.Request(name, contactInfo));
+        Customer.Response response = customerService.createCustomer(new Customer.Request(name, contactInfo));
         return "redirect:/customer/all";
     }
 

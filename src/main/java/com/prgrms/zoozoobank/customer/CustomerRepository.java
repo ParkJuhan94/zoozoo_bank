@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-import static com.prgrms.zoozoobank.customer.util.CustomerMessage.FAILURE_CREATE_CUSTOMER;
-import static com.prgrms.zoozoobank.customer.util.CustomerMessage.SUCCESS_CREATE_CUSTOMER;
+import static com.prgrms.zoozoobank.customer.CustomerMessage.FAILURE_CREATE_CUSTOMER;
+import static com.prgrms.zoozoobank.customer.CustomerMessage.SUCCESS_CREATE_CUSTOMER;
 
 @Repository
 public class CustomerRepository {

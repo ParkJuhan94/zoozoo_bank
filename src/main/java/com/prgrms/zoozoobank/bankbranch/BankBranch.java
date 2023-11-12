@@ -1,17 +1,16 @@
 package com.prgrms.zoozoobank.bankbranch;
 
 import com.prgrms.zoozoobank.account.Account;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BankBranch {
 
-    @Getter
+    @Getter @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
     public static class Info {
         private int id;
@@ -21,14 +20,15 @@ public class BankBranch {
     }
 
     @Getter @Setter
+    @AllArgsConstructor
     public static class Request {
         private long assets;
         private String branchName;
-        private List<Account> accounts;
     }
 
-    @Getter
+    @Getter @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Response {
         private BankBranch.Info info;
         private int returnCode;

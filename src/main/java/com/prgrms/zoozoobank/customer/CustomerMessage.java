@@ -1,14 +1,14 @@
-package com.prgrms.zoozoobank.customer.util;
+package com.prgrms.zoozoobank.customer;
 
 import lombok.Getter;
 
 @Getter
 public enum CustomerMessage {
-    SUCCESS_FIND_BY_ID("To find a customer by id is success"),
-    FAILURE_FIND_BY_ID("Failed to find a customer"),
+    SUCCESS_FIND_CUSTOMER_BY_ID("To find a customer by id is success"),
+    FAILURE_FIND_CUSTOMER_BY_ID("Failed to find a customer"),
     SUCCESS_CREATE_CUSTOMER("Customer created successfully"),
     FAILURE_CREATE_CUSTOMER("Failed to create customer"),
-    NAME_IS_NULL("Name is required"),
+    CUSTOMER_NAME_IS_NULL("Name is required"),
     CONTACT_INFO_IS_NULL("Contact info is required");
 
 

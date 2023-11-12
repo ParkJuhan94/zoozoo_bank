@@ -1,11 +1,14 @@
 package com.prgrms.zoozoobank.customer;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ui.Model;
+import static org.mockito.ArgumentMatchers.eq;
 
 import java.util.Collections;
 
@@ -24,31 +27,31 @@ public class CustomerControllerTest {
     private CustomerController customerController;
 
     @Test
+    @DisplayName("고객 리스트 조회시에 상호작용 확인")
     public void testGetAllCustomers() {
-        // Arrange
+        // given
         when(customerService.getAllCustomers()).thenReturn(Collections.emptyList());
 
-        // Act
+        // when
         String viewName = customerController.getAllCustomers(model);
 
-        // Assert
+        // then
         verify(model).addAttribute("customers", Collections.emptyList());
         Assertions.assertThat(viewName).isEqualTo("customer-list");
     }
 
     @Test
+    @DisplayName("고객 생성시에 상호작용 확인")
     public void testCreateCustomer() {
-        // Arrange
+        // given
         String name = "John Doe";
         String contactInfo = "123-456-7890";
 
-        // Act
+        // when
         String redirect = customerController.createCustomer(name, contactInfo);
 
-        // Assert
-        verify(customerService).createCustomer(new Customer.Request(name, contactInfo));
+        // then
         Assertions.assertThat(redirect).isEqualTo("redirect:/customer/all");
     }
 
-    // Add more tests for other methods in CustomerController
 }

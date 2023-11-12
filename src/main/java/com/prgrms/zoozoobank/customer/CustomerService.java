@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.prgrms.zoozoobank.customer.util.CustomerMessage.*;
-import static com.prgrms.zoozoobank.customer.util.CustomerValidator.*;
+import static com.prgrms.zoozoobank.customer.CustomerMessage.*;
+import static com.prgrms.zoozoobank.customer.CustomerValidator.*;
 
 @Service
 @Slf4j
@@ -31,7 +31,7 @@ public class CustomerService {
             repositoryResponse.setReturnCode(0);
         }
 
-        return handleRepositoryResponse(repositoryResponse, SUCCESS_FIND_BY_ID.getMessage(), FAILURE_FIND_BY_ID.getMessage());
+        return handleRepositoryResponse(repositoryResponse, SUCCESS_FIND_CUSTOMER_BY_ID.getMessage(), FAILURE_FIND_CUSTOMER_BY_ID.getMessage());
     }
 
     public Customer.Response createCustomer(Customer.Request request) {

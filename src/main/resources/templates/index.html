@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ZooZoo Bank</title>
+    <!-- Bootstrap link -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #111; /* background color */
+            color: #fff; /* base text color */
+        }
+        .container {
+            text-align: center;
+            margin-top: 100px;
+        }
+        .btn-action {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome to ZooZoo Bank</h1><br><br>
+    <div>
+        <a href="/customer/all" class="btn btn-primary btn-action">Customer Management</a>
+    </div>
+    <div>
+        <a href="/account/all" class="btn btn-success btn-action">Account Management</a>
+    </div>
+    <div>
+        <a href="/branch/all" class="btn btn-info btn-action">Bank Branch Management</a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/zoozoo_bank
+    username: root
+    password: 110811
+  profiles:
+    active: dev
+
+logging:
+  level:
+    root: info
+    com.prgrms.zoozoobank: debug
+
+server:
+  port: 8080
+
+info:
+  app:
+    name: ZooZooBank
+    description: "A banking application"
+    version: "1.0.0"

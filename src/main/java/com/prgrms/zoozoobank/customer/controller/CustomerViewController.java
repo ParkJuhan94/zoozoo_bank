@@ -1,5 +1,7 @@
-package com.prgrms.zoozoobank.customer;
+package com.prgrms.zoozoobank.customer.controller;
 
+import com.prgrms.zoozoobank.customer.service.CustomerService;
+import com.prgrms.zoozoobank.customer.domain.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,16 +12,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-import static com.prgrms.zoozoobank.customer.CustomerValidator.validateCreateRequest;
+import static com.prgrms.zoozoobank.customer.controller.CustomerMessage.*;
 
 @Controller
 @Slf4j
 @RequestMapping("/customer")
-public class CustomerController {
+public class CustomerViewController {
 
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerViewController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
@@ -31,7 +33,7 @@ public class CustomerController {
 
     @GetMapping("/all")
     public String getAllCustomers(Model model) {
-        List<Customer.Info> customers = customerService.getAllCustomers();
+        List<Customer> customers = customerService.getAllCustomers();
         model.addAttribute("customers", customers);
         return "customer-list";
     }
@@ -44,19 +46,22 @@ public class CustomerController {
     @PostMapping("/create")
     public String createCustomer(@RequestParam(value = "name") String name,
                                  @RequestParam(value = "contactInfo") String contactInfo,
-                                 Model model, RedirectAttributes redirectAttributes) {
+                                 RedirectAttributes redirectAttributes) {
         Customer.Request request = new Customer.Request(name, contactInfo);
-        Customer.Response response = validateCreateRequest(request);
-        if (response != null) {
-            // 검증 실패 메시지를 RedirectAttributes에 추가
-            redirectAttributes.addFlashAttribute("errorMessage", response.getReturnMessage());
-            return "redirect:/customer/create"; // 실패 시 다시 폼 페이지로 리다이렉션
+
+        if(!validateCreateRequest(request)){
+            redirectAttributes.addFlashAttribute("errorMessage", FAILURE_CREATE_CUSTOMER_INPUT.getMessage());
+            return "redirect:/customer/create";
         }
 
-        customerService.createCustomer(request);
-        return "redirect:/customer/all";
+        if(customerService.createCustomer(request).getReturnCode() == 0){
+            redirectAttributes.addFlashAttribute("errorMessage", FAILURE_CREATE_CUSTOMER_DUPLICATED.getMessage());
+            return "redirect:/customer/create";
+        }else{
+            redirectAttributes.addFlashAttribute("createMessage", SUCCESS_CREATE_CUSTOMER.getMessage());
+            return "redirect:/customer/all";
+        }
     }
-
 
     @PostMapping("/delete/{customerId}")
     public String deleteCustomer(@PathVariable int customerId) {
@@ -64,4 +69,15 @@ public class CustomerController {
         return "redirect:/customer/all";
     }
 
+    private boolean validateCreateRequest(Customer.Request request) {
+        if (request.getName() == null || request.getName().isEmpty()) {
+            return false;
+        }
+
+        String contactInfo = request.getContactInfo();
+        if (contactInfo == null || contactInfo.isEmpty() || contactInfo.length() != 13) {
+            return false;
+        }
+        return true;
+    }
 }

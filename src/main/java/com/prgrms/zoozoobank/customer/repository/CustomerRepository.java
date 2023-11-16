@@ -1,5 +1,6 @@
-package com.prgrms.zoozoobank.customer;
+package com.prgrms.zoozoobank.customer.repository;
 
+import com.prgrms.zoozoobank.customer.domain.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -7,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-import static com.prgrms.zoozoobank.customer.CustomerMessage.FAILURE_CREATE_CUSTOMER;
-import static com.prgrms.zoozoobank.customer.CustomerMessage.SUCCESS_CREATE_CUSTOMER;
+import static com.prgrms.zoozoobank.customer.controller.CustomerMessage.FAILURE_CREATE_CUSTOMER;
+import static com.prgrms.zoozoobank.customer.controller.CustomerMessage.SUCCESS_CREATE_CUSTOMER;
 
 @Repository
 @Slf4j
@@ -20,14 +21,14 @@ public class CustomerRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Optional<Customer.Info> findById(int id) {
+    public Optional<Customer> findById(int id) {
         String sql = "SELECT id, name, contact_info FROM customer WHERE id = :id";
 
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        List<Customer.Info> customerInfos = namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
-            Customer.Info customerInfo = new Customer.Info();
+        List<Customer> customerInfos = namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            Customer customerInfo = new Customer();
             customerInfo.setId(rs.getInt("id"));
             customerInfo.setName(rs.getString("name"));
             customerInfo.setContactInfo(rs.getString("contact_info"));
@@ -41,10 +42,9 @@ public class CustomerRepository {
         }
     }
 
-
-    public Customer.Response save(Customer.Request request) {
+    public boolean save(Customer.Request request) {
         if (customerExists(request.getName(), request.getContactInfo())) {
-            return new Customer.Response(null, 0, FAILURE_CREATE_CUSTOMER.getMessage());
+            return false;
         }
 
         String sql = "INSERT INTO customer (name, contact_info) VALUES (:name, :contactInfo)";
@@ -52,29 +52,29 @@ public class CustomerRepository {
         params.put("name", request.getName());
         params.put("contactInfo", request.getContactInfo());
 
-        namedParameterJdbcTemplate.update(sql, params);
-
-        return new Customer.Response(new Customer.Info(request.getName(), request.getContactInfo()),
-                1, SUCCESS_CREATE_CUSTOMER.getMessage());
+        int update = namedParameterJdbcTemplate.update(sql, params);
+        if(update == 0){
+            return false;
+        }
+        return true;
     }
 
-    public List<Customer.Info> findAll() {
+    public List<Customer> findAll() {
         String sql = "SELECT * FROM customer";
-        return namedParameterJdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Customer.Info.class));
+        return namedParameterJdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Customer.class));
     }
 
     public void deleteById(int customerId) {
-        String sql = "DELETE FROM customer WHERE id = :id";
+        String sql = "DELETE FROM account WHERE customer_id = :id";
         Map<String, Object> params = new HashMap<>();
         params.put("id", customerId);
         namedParameterJdbcTemplate.update(sql, params);
 
-        // 연결된 계좌 삭제
-        sql = "DELETE FROM account WHERE customer_id = :id";
+        sql = "DELETE FROM customer WHERE id = :id";
         namedParameterJdbcTemplate.update(sql, params);
     }
 
-    private boolean customerExists(String name, String contactInfo) {
+    public boolean customerExists(String name, String contactInfo) {
         String sql = "SELECT COUNT(*) FROM customer WHERE contact_info = :contactInfo";
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);

@@ -1,4 +1,4 @@
-package com.prgrms.zoozoobank.customer;
+package com.prgrms.zoozoobank.customer.controller;
 
 import lombok.Getter;
 
@@ -8,9 +8,8 @@ public enum CustomerMessage {
     FAILURE_FIND_CUSTOMER_BY_ID("Failed to find a customer"),
     SUCCESS_CREATE_CUSTOMER("Customer was created successfully"),
     FAILURE_CREATE_CUSTOMER("Failed to create a customer"),
-    CUSTOMER_NAME_IS_NULL("Name is required"),
-    CONTACT_INFO_IS_NULL("Contact info is required");
-
+    FAILURE_CREATE_CUSTOMER_INPUT("Failed to create a customer because of wrong inputs"),
+    FAILURE_CREATE_CUSTOMER_DUPLICATED("Failed to create a customer because he is duplicated"),;
 
     CustomerMessage(String message) {
         this.message = message;

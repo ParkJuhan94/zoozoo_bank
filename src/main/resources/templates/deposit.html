@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>입금</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-light">
+<div class="container mt-4">
+    <h2 class="text-light">입금하기</h2>
+    <form th:action="@{/account/deposit/__${account.id}__}" method="post">
+        <div class="form-group">
+            <label for="amount">금액:</label>
+            <input type="text" class="form-control" id="amount" name="amount" style="width: 200px" placeholder="입금액을 입력하세요" required>
+        </div>
+        <button type="submit" class="btn btn-primary">입금</button>
+    </form>
+</div>
+</body>
+</html>

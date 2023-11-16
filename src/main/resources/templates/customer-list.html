@@ -10,18 +10,6 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
 
-    <!-- 다크 모드 스타일 -->
-    <link rel="stylesheet" th:href="@{/path/to/dark-mode-style.css}">
-
-    <script th:inline="javascript">
-        /* Check if the "duplicateCustomer" attribute is present in the model */
-        var duplicateCustomer = /*[[${duplicateCustomer}]]*/ false;
-
-        if (duplicateCustomer) {
-            alert("Customer with the same name or contact info already exists. Please provide unique information.");
-        }
-    </script>
-
 </head>
 <body class="bg-dark text-light">
 
@@ -67,5 +55,16 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script th:inline="javascript">
+    var errorMessage = [[${errorMessage}]];
+    if (errorMessage) {
+        alert("Customer with the contact info already exists. Please provide unique information.");
+    }
+
+    var createMessage = [[${createMessage}]];
+    if (createMessage) {
+        alert(createMessage);
+    }
+</script>
 </body>
 </html>

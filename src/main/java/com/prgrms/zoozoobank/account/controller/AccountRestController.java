@@ -2,13 +2,20 @@ package com.prgrms.zoozoobank.account.controller;
 
 import com.prgrms.zoozoobank.account.domain.Account;
 import com.prgrms.zoozoobank.account.service.AccountService;
+import com.prgrms.zoozoobank.bankbranch.domain.BankBranch;
 import com.prgrms.zoozoobank.bankbranch.service.BankBranchService;
 import com.prgrms.zoozoobank.customer.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+
+import static com.prgrms.zoozoobank.account.controller.AccountMessage.*;
+import static com.prgrms.zoozoobank.account.controller.AccountMessage.SUCCESS_CREATE_ACCOUNT;
 
 @RestController
 @Slf4j
@@ -28,36 +35,45 @@ public class AccountRestController {
     @GetMapping
     public ResponseEntity<List<Account>> getAllAccounts() {
         List<Account> accounts = accountService.getAllAccounts();
-        return ResponseEntity.ok(accounts);
+        if (accounts.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<Account> getAccountById(@PathVariable int accountId) {
-        return accountService.getAccountById(accountId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Account> getAccountById(@PathVariable("accountId") int accountId) {
+        Account account = accountService.getAccountById(accountId).getAccount();
+        return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Account> createAccount(@RequestBody Account.Request request) {
+    public ResponseEntity<?> createAccount(@RequestBody Account.Request request) {
         Account.Response response = accountService.createAccount(request);
         if (response.getReturnCode() != 0) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILURE_CREATE_ACCOUNT.getMessage());
         }
-        return ResponseEntity.ok(response.getAccount());
-    }
-
-    @PutMapping("/{accountId}")
-    public ResponseEntity<Account> updateAccount(@PathVariable int accountId, @RequestBody Account accountDetails) {
-        // Update logic here
-        return ResponseEntity.ok(updatedAccount);
+        return ResponseEntity.ok().body(SUCCESS_CREATE_ACCOUNT.getMessage());
     }
 
     @DeleteMapping("/{accountId}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable int accountId) {
+    public ResponseEntity<Void> deleteAccount(@PathVariable("accountId") int accountId) {
         accountService.deleteAccountById(accountId);
         return ResponseEntity.ok().build();
     }
 
-    // Deposit and withdraw endpoints here
+    @PostMapping("/{accountId}")
+    @Transactional
+    public ResponseEntity<?> updateBalance(@PathVariable("accountId") int accountId, @RequestParam("amount") long amount) {
+        Account.Response accountResponse = accountService.modifyAccountBalance(accountId, amount);
+        int branchId = accountService.getAccountById(accountId).getAccount().getBranchId();
+        BankBranch.Response bankBranchResponse = bankBranchService.modifyBankBranchAssets(branchId, amount);
+
+        if (accountResponse.getReturnCode() == 1 && bankBranchResponse.getReturnCode() == 1) {
+            return ResponseEntity.ok().body(SUCCESS_UPDATE_ACCOUNT.getMessage());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILURE_UPDATE_ACCOUNT.getMessage());
+        }
+    }
+
 }

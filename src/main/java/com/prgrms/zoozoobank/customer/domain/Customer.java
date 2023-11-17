@@ -32,17 +32,14 @@ public class Customer {
     }
 
     @Getter
-    @Setter
     @AllArgsConstructor
     public static class Request {
         private String name;
         private String contactInfo;
     }
 
-    @Getter
-    @Setter
+    @Getter @Setter
     @AllArgsConstructor
-    @NoArgsConstructor
     public static class Response {
         private Customer customer;
         private int returnCode;

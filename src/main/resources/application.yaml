@@ -12,10 +12,22 @@ logging:
     com.prgrms.zoozoobank: debug
 
 server:
-  port: 8081
+  port: 8080
 
 info:
   app:
     name: ZooZooBank
     description: "A banking application"
     version: "1.0.0"
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui/index.html
+    groups-order: DESC
+    doc-expansion: none
+    tags-sorter: alpha
+    operationsSorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true

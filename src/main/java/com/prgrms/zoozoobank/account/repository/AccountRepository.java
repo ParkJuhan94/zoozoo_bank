@@ -55,29 +55,29 @@ public class AccountRepository {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        List<Account> accountInfos = namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
-            Account accountInfo = new Account();
-            accountInfo.setId(rs.getInt("id"));
-            accountInfo.setBalance(rs.getLong("balance"));
-            accountInfo.setCustomerId(rs.getInt("customer_id"));
-            accountInfo.setBranchId(rs.getInt("branch_id"));
-            return accountInfo;
+        List<Account> accounts = namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            Account account = new Account();
+            account.setId(rs.getInt("id"));
+            account.setBalance(rs.getLong("balance"));
+            account.setCustomerId(rs.getInt("customer_id"));
+            account.setBranchId(rs.getInt("branch_id"));
+            return account;
         });
 
-        if (accountInfos.isEmpty()) {
+        if (accounts.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(accountInfos.get(0));
+            return Optional.of(accounts.get(0));
         }
     }
 
     public boolean updateBalance(int accountId, long amount) {
-        Optional<Account> accountInfo = findById(accountId);
-        if (!accountInfo.isPresent()) {
+        Optional<Account> account = findById(accountId);
+        if (!account.isPresent()) {
             return false;
         }
 
-        long newBalance = accountInfo.get().getBalance() + amount;
+        long newBalance = account.get().getBalance() + amount;
         if (newBalance < 0) {
             return false;
         }

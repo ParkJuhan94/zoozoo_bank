@@ -2,8 +2,7 @@ package com.prgrms.zoozoobank.account.domain;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {
@@ -24,7 +23,6 @@ public class Account {
     }
 
     @Getter
-    @Setter
     @AllArgsConstructor
     public static class Request {
         private long balance;
@@ -32,10 +30,8 @@ public class Account {
         private int branchId;
     }
 
-    @Getter
-    @Setter
+    @Getter @Setter
     @AllArgsConstructor
-    @NoArgsConstructor
     public static class Response {
         private Account account;
         private int returnCode;

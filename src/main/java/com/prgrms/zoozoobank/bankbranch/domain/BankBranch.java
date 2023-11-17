@@ -17,17 +17,14 @@ public class BankBranch {
     private List<Account> accounts;
 
     @Getter
-    @Setter
     @AllArgsConstructor
     public static class Request {
         private long assets;
         private String branchName;
     }
 
-    @Getter
-    @Setter
+    @Getter @Setter
     @AllArgsConstructor
-    @NoArgsConstructor
     public static class Response {
         private BankBranch bankBranch;
         private int returnCode;

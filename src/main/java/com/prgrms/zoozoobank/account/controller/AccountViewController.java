@@ -65,7 +65,7 @@ public class AccountViewController {
         return REDIRECT_ACCOUNT_ALL;
     }
 
-    @GetMapping("/create")
+    @GetMapping("/create/step1")
     public String showAccountCreationForm(Model model) {
         List<Customer> customers = customerService.getAllCustomers();
         model.addAttribute("customers", customers);
